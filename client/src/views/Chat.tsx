@@ -230,7 +230,7 @@ const Chat: FC = () => {
                         />
                     </div>
 
-                    <div className="grid gap-y-6">
+                    <div className="grid gap-y-2.5">
                         {(users as any)?.length > 0 ? (
                             <>
                                 {users?.map((_user: any) => (
@@ -244,7 +244,7 @@ const Chat: FC = () => {
                                                         _chat?.contactId ===
                                                         user?.id
                                                 )?.length > 0
-                                            )
+                                            ) {
                                                 setSearchParams(
                                                     'with=' +
                                                         _user?.chats?.filter(
@@ -253,13 +253,14 @@ const Chat: FC = () => {
                                                                 user?.id
                                                         )[0].id
                                                 )
-                                            else if (
+                                                window.location.reload()
+                                            } else if (
                                                 _user?.Chat?.filter(
                                                     (_chat: any) =>
                                                         _chat?.userId ===
                                                         user?.id
                                                 )?.length > 0
-                                            )
+                                            ) {
                                                 setSearchParams(
                                                     'with=' +
                                                         _user?.Chat?.filter(
@@ -268,9 +269,11 @@ const Chat: FC = () => {
                                                                 user?.id
                                                         )[0].id
                                                 )
+                                                window.location.reload()
+                                            }
                                         }}
                                     >
-                                        <div className="flex gap-x-3.5">
+                                        <div className="flex gap-x-3.5 p-5">
                                             <div className="w-[60px] aspect-square bg-gray-100 rounded-full grid place-items-center">
                                                 <User />
                                             </div>
@@ -328,10 +331,20 @@ const Chat: FC = () => {
                                 {userChats?.map((chat: any) => (
                                     <section
                                         key={chat?.id}
-                                        className="flex items-center cursor-pointer justify-between"
-                                        onClick={() =>
+                                        className={`flex items-center cursor-pointer justify-between p-5 rounded-lg ${
+                                            chat?.id ===
+                                            parseInt(
+                                                searchParams.get(
+                                                    'with'
+                                                ) as string
+                                            )
+                                                ? 'bg-blue-50'
+                                                : ''
+                                        }`}
+                                        onClick={() => {
                                             setSearchParams('with=' + chat?.id)
-                                        }
+                                            window.location.reload()
+                                        }}
                                     >
                                         <div className="flex gap-x-3.5">
                                             <div className="w-[60px] aspect-square bg-gray-100 rounded-full grid place-items-center">
@@ -349,10 +362,20 @@ const Chat: FC = () => {
                                 {user?.Chat?.map((chat: any) => (
                                     <section
                                         key={chat?.id}
-                                        className="flex items-center cursor-pointer justify-between"
-                                        onClick={() =>
+                                        className={`flex items-center cursor-pointer justify-between p-5 rounded-lg ${
+                                            chat?.id ===
+                                            parseInt(
+                                                searchParams.get(
+                                                    'with'
+                                                ) as string
+                                            )
+                                                ? 'bg-blue-50'
+                                                : ''
+                                        }`}
+                                        onClick={() => {
                                             setSearchParams('with=' + chat?.id)
-                                        }
+                                            window.location.reload()
+                                        }}
                                     >
                                         <div className="flex gap-x-3.5">
                                             <div className="w-[60px] aspect-square bg-gray-100 rounded-full grid place-items-center">
