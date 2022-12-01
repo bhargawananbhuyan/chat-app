@@ -1,13 +1,13 @@
-import { faker } from '@faker-js/faker'
 import axios from 'axios'
 import { useFormik } from 'formik'
 import _ from 'lodash'
 import { ChangeEvent, FC, useEffect, useState } from 'react'
-import { Edit2, User } from 'react-feather'
+import { User } from 'react-feather'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { io } from 'socket.io-client'
 import * as Yup from 'yup'
 import TextField from '../components/TextField'
+import { API_URL } from '../utils/constants'
 
 type Message = {
     id: number
@@ -35,7 +35,7 @@ const validationSchema1 = Yup.object().shape({
     password: Yup.string().min(8).max(20).required(),
 })
 
-const socket = io('/', {
+const socket = io(`${API_URL}`, {
     transports: ['websocket'],
 })
 
@@ -44,7 +44,7 @@ const Chat: FC = () => {
     const navigate = useNavigate()
     useEffect(() => {
         ;(async () => {
-            const res = await axios.get('/auth/user', {
+            const res = await axios.get(`${API_URL}auth/user`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('@token')}`,
                 },
@@ -139,7 +139,7 @@ const Chat: FC = () => {
     const searchUsers = _.debounce(async (query: string) => {
         if (!query) return setUsers([])
 
-        const res = await axios.get(`/auth/users?q=${query}`, {
+        const res = await axios.get(`${API_URL}auth/users?q=${query}`, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('@token')}`,
             },
@@ -177,7 +177,7 @@ const Chat: FC = () => {
         validationSchema: validationSchema1,
         onSubmit: async (values) => {
             try {
-                const res = await axios.patch('/auth/user', values, {
+                const res = await axios.patch(`${API_URL}auth/user`, values, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem(
                             '@token'
@@ -236,7 +236,7 @@ const Chat: FC = () => {
                                 {users?.map((_user: any) => (
                                     <section
                                         key={_user?.id}
-                                        className="flex items-center cursor-pointer justify-between"
+                                        className="flex items-center cursor-pointer justify-between flex-wrap"
                                         onClick={() => {
                                             if (
                                                 _user?.chats?.filter(
@@ -273,7 +273,7 @@ const Chat: FC = () => {
                                             }
                                         }}
                                     >
-                                        <div className="flex gap-x-3.5 p-5">
+                                        <div className="flex gap-3.5 p-2.5 flex-wrap">
                                             <div className="w-[60px] aspect-square bg-gray-100 rounded-full grid place-items-center">
                                                 <User />
                                             </div>
@@ -300,7 +300,7 @@ const Chat: FC = () => {
                                                 onClick={async () => {
                                                     const res =
                                                         await axios.post(
-                                                            '/chats',
+                                                            `${API_URL}chats`,
                                                             {
                                                                 contactId:
                                                                     _user?.id,
@@ -331,7 +331,7 @@ const Chat: FC = () => {
                                 {userChats?.map((chat: any) => (
                                     <section
                                         key={chat?.id}
-                                        className={`flex items-center cursor-pointer justify-between p-5 rounded-lg ${
+                                        className={`flex items-center cursor-pointer justify-between p-2.5 rounded-lg ${
                                             chat?.id ===
                                             parseInt(
                                                 searchParams.get(
@@ -362,7 +362,7 @@ const Chat: FC = () => {
                                 {user?.Chat?.map((chat: any) => (
                                     <section
                                         key={chat?.id}
-                                        className={`flex items-center cursor-pointer justify-between p-5 rounded-lg ${
+                                        className={`flex items-center cursor-pointer justify-between p-2.5 rounded-lg ${
                                             chat?.id ===
                                             parseInt(
                                                 searchParams.get(

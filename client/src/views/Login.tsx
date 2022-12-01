@@ -5,6 +5,7 @@ import * as Yup from 'yup'
 import { useFormik } from 'formik'
 import TextField from '../components/TextField'
 import axios from 'axios'
+import { API_URL } from '../utils/constants'
 
 const validationSchema = Yup.object().shape({
     email: Yup.string().email().required(),
@@ -22,7 +23,7 @@ const Login: FC = () => {
         validationSchema,
         onSubmit: async (values, { resetForm }) => {
             try {
-                const res = await axios.post('/auth/login', values)
+                const res = await axios.post(`${API_URL}auth/login`, values)
                 if (res.status === 201) {
                     const token = res.data?.token
                     localStorage.setItem('@token', token)
